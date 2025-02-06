@@ -1,0 +1,151 @@
+{% extends "users/basic.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+  <h1 class="text-center mb-4">Select Your Seats</h1>
+  <div class="screen text-center mb-4">All eyes this way please!</div>
+
+  <!-- Seat Grid -->
+  <form id="seatForm" method="POST">
+    {% csrf_token %}
+    <div class="seat-grid">
+      {% for seat in seats %}
+      <div class="seat {% if seat.is_booked %}sold{% else %}available{% endif %}" data-id="{{ seat.id }}">
+        {{ seat.seat_number }}
+      </div>
+      {% endfor %}
+    </div>
+    <button type="submit" class="btn btn-success mt-4">Book Selected Seats</button>
+  </form>
+  <h3>Ticket Price: ₹<span id="ticketPrice">Loading...</span></h3>
+
+  <!-- Seat Legend -->
+
+  <!-- <div class="d-flex justify-content-center mb-4">
+    <div class="d-flex align-items-center me-4">
+      <div class="seat" style="background-color: white"></div>
+      <span class="ms-2">Available</span>
+    </div>
+
+    <div class="d-flex align-items-center me-4">
+      <div class="seat selected"></div>
+      <span class="ms-2">Selected</span>
+    </div>
+
+    <div class="d-flex align-items-center">
+      <div class="seat sold"></div>
+      <span class="ms-2">Sold</span>
+    </div>
+  </div> -->
+
+</div>
+
+
+<style>
+  .container {
+    max-width: 600px;
+  }
+
+  .screen {
+    background: #ddd;
+    padding: 10px;
+    border-radius: 10px;
+    font-weight: bold;
+  }
+
+  .seat-grid {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    /* 8 seats per row */
+    gap: 10px;
+  }
+
+  .seat {
+    width: 40px;
+    height: 40px;
+    border-radius: 5px;
+    text-align: center;
+    line-height: 40px;
+    font-size: 14px;
+    cursor: pointer;
+    border: 1px solid #4caf50;
+  }
+
+  .available {
+    background: #fff;
+  }
+
+  .selected {
+    background: #4caf50;
+    color: white;
+  }
+
+  .sold {
+    background: #ccc;
+    pointer-events: none;
+    /* Prevent clicks */
+  }
+</style>
+
+<script>
+  // ----------------------handling seat allocation, booking----------------------
+  document.addEventListener('DOMContentLoaded', function () {
+    const availableSeats = document.querySelectorAll('.seat.available');
+    const selectedSeats = new Set();
+
+    availableSeats.forEach(seat => {
+      seat.addEventListener('click', () => {
+        const seatId = seat.dataset.id;
+        if (selectedSeats.has(seatId)) {
+          selectedSeats.delete(seatId);
+          seat.classList.remove('selected');
+        } else {
+          selectedSeats.add(seatId);
+          seat.classList.add('selected');
+        }
+      });
+    });
+
+    // Handle form submission
+    document.getElementById('seatForm').addEventListener('submit', function (event) {
+      event.preventDefault();
+      if (selectedSeats.size === 0) {
+        alert("Please select at least one seat to book.");
+        return;
+      }
+
+      // Send selected seat IDs to the backend
+      fetch("", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": "{{ csrf_token }}",
+        },
+        body: JSON.stringify({ seats: Array.from(selectedSeats) }),
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert("Seats booked successfully!");
+            location.reload(); // Reload to update seat availability
+          } else {
+            alert("Error booking seats. Please try again.");
+          }
+        })
+        .catch(error => console.error("Error:", error));
+    });
+  });
+
+  document.addEventListener('DOMContentLoaded', function () {
+    fetch("{% url 'get_dynamic_price' theaters.id %}")
+      .then(response => response.json())
+      .then(data => {
+        console.log("Received price:", data.price);  // Debugging output
+        document.getElementById('ticketPrice').textContent = data.price;
+      })
+      .catch(error => console.error("Error fetching price:", error));
+  });
+
+</script>
+{% endblock %}

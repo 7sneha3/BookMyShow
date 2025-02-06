@@ -1,0 +1,709 @@
+{% extends "users/basic.html" %}
+{% block content %}
+
+<style>
+  .read-more-link {
+    color: black;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
+  .read-more-link:hover {
+    color: darkblue;
+  }
+
+  body {
+    font-family: "Arial", sans-serif;
+    background-color: #f8f9fa;
+  }
+
+  .section-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 30px 0 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #007bff;
+    color: #333;
+  }
+
+  .card {
+    transition: transform 0.3s, box-shadow 0.3s;
+    margin-bottom: 20px;
+    border: none;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  .card-img-top {
+    object-fit: cover;
+  }
+
+  .card-body {
+    background-color: #fff;
+    padding: 15px;
+  }
+
+  .card-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 5px;
+  }
+
+  .card-text {
+    font-size: 14px;
+    color: #666;
+  }
+
+  .carousel-caption {
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    padding: 20px;
+  }
+
+  /* Adjust carousel height for smaller screens */
+  @media (max-width: 768px) {
+    .carousel-item img {
+      margin: -19px auto;
+      height: 150px;
+      /* Smaller height for mobile */
+      object-fit: contain;
+      /* Ensures image fits properly */
+    }
+  }
+
+  @media (min-width: 769px) {
+    .carousel-item img {
+      height: 350px;
+      /* Larger height for desktops */
+    }
+  }
+
+  .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+
+  .btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+  }
+
+  .highlight {
+    background-color: #fffae6;
+    /* Light yellow */
+    border: 2px solid #ffc107;
+    /* Golden border */
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+
+  .highlight h2 {
+    color: #ff4500;
+    /* Orange color */
+  }
+
+  .showtime {
+    font-size: 1.2em;
+    color: #007bff;
+  }
+
+  .banner {
+    width: 100%;
+    max-width: 1200px;
+    /* Adjust as needed */
+    margin: 20px auto;
+    display: block;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out;
+  }
+
+  @media (max-width: 768px) {
+    .banner {
+      margin: -18px auto;
+    }
+
+    .alert-info {
+      margin: -19px auto;
+      font-size: 13px;
+    }
+
+    .section-title {
+      font-size: 14px;
+    }
+
+    .card,
+    shadow-lg {
+      margin: 56px;
+    }
+  }
+
+  .banner img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .banner-link {
+    display: block;
+    text-decoration: none;
+  }
+
+  .banner:hover {
+    transform: scale(1.01);
+    /* Adds a hover effect */
+  }
+
+  /* Base Styles */
+  .card-carousel {
+    position: relative;
+    overflow: hidden;
+    margin: 20px 0;
+  }
+
+  /* Container for Swiping */
+  .card-container {
+    display: flex;
+    transition: transform 0.5s ease;
+  }
+
+  /* Individual Cards */
+  .card {
+    min-width: 200px;
+    /* Ensures cards are swipeable */
+    margin: 10px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .card img {
+    width: 100%;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+  }
+
+  /* Swipe Buttons */
+  .carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #000000;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    z-index: 1;
+    border-radius: 50%;
+    display: none;
+    /* Hidden by default */
+  }
+
+  .left-btn {
+    left: 10px;
+  }
+
+  .right-btn {
+    right: 10px;
+  }
+
+  /* Mobile Specific Styles */
+  @media (max-width: 768px) {
+    .carousel-btn {
+      display: block;
+      /* Show swipe buttons on mobile */
+    }
+
+    .card {
+      min-width: 80%;
+      /* Larger card width for mobile */
+    }
+  }
+
+  /* Carousel Wrapper */
+  .card-carousel {
+    position: relative;
+    overflow: hidden;
+    margin: 20px 0;
+  }
+
+  /* Container for Swiping */
+  .card-container {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+    overflow-x: auto;
+    /* Enables horizontal scrolling */
+    scroll-behavior: smooth;
+    gap: 15px;
+    /* Space between cards */
+    padding-bottom: 10px;
+    /* Prevents cutting off scroll */
+    scrollbar-width: none;
+    /* Hide scrollbar for Firefox */
+  }
+
+  .card-container::-webkit-scrollbar {
+    display: none;
+    /* Hide scrollbar for Chrome, Safari */
+  }
+
+  /* Individual Cards */
+  .card {
+    flex: 0 0 calc(20% - 15px);
+    /* 5 cards per row */
+    max-width: calc(20% - 15px);
+    min-width: 250px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .card img {
+    width: 100%;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+  }
+
+  /* Swipe Buttons */
+  .carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    z-index: 10;
+    border-radius: 50%;
+    display: none;
+    /* Initially hidden */
+  }
+
+  .left-btn {
+    left: 5px;
+  }
+
+  .right-btn {
+    right: 5px;
+  }
+
+  /* Mobile: Show 2 cards per row */
+  @media (max-width: 768px) {
+    .card {
+      flex: 0 0 50%;
+      max-width: 50%;
+    }
+
+    .carousel-btn {
+      display: block;
+      /* Show swipe buttons */
+    }
+  }
+
+  /* Tablet: Show 3 cards per row */
+  @media (max-width: 1024px) {
+    .card {
+      flex: 0 0 33%;
+      max-width: 33%;
+    }
+  }
+</style>
+
+<div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+  <div class="carousel-indicators">
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"></button>
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"></button>
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"></button>
+  </div>
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img class="d-block w-100"
+        src="https://assets-in.bmscdn.com/promotions/cms/creatives/1728390794440_bandlanddesktop.jpg" alt="First slide"
+        height="300" />
+    </div>
+    <div class="carousel-item">
+      <img class="d-block w-100"
+        src="https://assets-in.bmscdn.com/promotions/cms/creatives/1726036566435_playcardnewweb.jpg" alt="Second slide"
+        height="300" />
+    </div>
+    <div class="carousel-item">
+      <img class="d-block w-100"
+        src="https://assets-in.bmscdn.com/promotions/cms/creatives/1738590498380_rickeykejdesktopcarousel.jpg"
+        alt="Third slide" height="300" />
+    </div>
+  </div>
+
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>
+
+<div class="container mt-4">
+  {% if not user.is_authenticated %}
+  <div class="alert alert-info" role="alert">
+    <a href="{% url 'login' %}" class="alert-link">Login</a> or
+    <a href="{% url 'register' %}" class="alert-link">Register</a> to continue.
+  </div>
+  {% endif %}
+
+  <div class="section-title">Recommended Movies</div>
+  <div class="row">
+    {% if movies %}
+    {% for movie in movies|slice:":4" %}
+    <div class="col-md-3 col-sm-6">
+      <a href="{% url 'theater_list' movie.id %}" class="text-decoration-none">
+        <div class="card h-100">
+          <img src="{{ movie.image.url }}" alt="image" class="card-img-top" height="300">
+          <div class="card-body">
+            <h5 class="card-title">{{ movie.name }}</h5>
+            <p class="card-text">
+              <span class="short-description" style="color: black;">
+                {{ movie.description|truncatechars:100 }}
+              </span>
+              <span class="full-description d-none" style="color: black;">
+                {{ movie.description }}
+              </span>
+              <a href="javascript:void(0)" class="read-more-link">Read More</a>
+            </p>
+          </div>
+        </div>
+      </a>
+    </div>
+    {% endfor %}
+    {% endif %}
+  </div>
+
+  <div class="section-title">Today's Movies and Showtimes</div>
+  <a href="{% url 'current_shows' %}" class="banner-link">
+    <div class="banner">
+      <img
+        src="https://assets-in.bmscdn.com/discovery-catalog/collections/tr:w-1440,h-120/stream-leadin-web-collection-202210241242.png"
+        alt="Endless Entertainment Anytime. Anywhere!">
+    </div>
+  </a>
+
+  <div class="section-title">The Best of Live Events</div>
+  <div class="card-carousel">
+    <button class="carousel-btn left-btn">&#8592;</button> <!-- Left Button -->
+    <div class="card-container">
+      <div class="card">
+        <img src="https://storage.googleapis.com/a1aa/image/wQXDIlqv4XoxGtNEO9XkSKBZYe9IuDePUWEcd0WwqcNzY5nTA.jpg"
+          class="card-img-top" alt="Event 1" />
+        <div class="card-body">
+          <h5 class="card-title">Event 1</h5>
+        </div>
+      </div>
+      <div class="card">
+        <img src="https://storage.googleapis.com/a1aa/image/t52p8goZiO6QDBfid8wRyReanID18f5AxbszVhfPgESGklfcC.jpg"
+          class="card-img-top" alt="Event 2" />
+        <div class="card-body">
+          <h5 class="card-title">Event 2</h5>
+        </div>
+      </div>
+      <div class="card">
+        <img src="https://storage.googleapis.com/a1aa/image/lAqCOht0TCaeSSLzw2ZGlPmDwvIEI3RtqajPoTYQN0ZOs8zJA.jpg"
+          class="card-img-top" alt="Event 3" />
+        <div class="card-body">
+          <h5 class="card-title">Event 3</h5>
+        </div>
+      </div>
+      <div class="card">
+        <img src="https://storage.googleapis.com/a1aa/image/wQXDIlqv4XoxGtNEO9XkSKBZYe9IuDePUWEcd0WwqcNzY5nTA.jpg"
+          class="card-img-top" alt="Event 4" />
+        <div class="card-body">
+          <h5 class="card-title">Event 4</h5>
+        </div>
+      </div>
+      <div class="card">
+        <img src="https://storage.googleapis.com/a1aa/image/t52p8goZiO6QDBfid8wRyReanID18f5AxbszVhfPgESGklfcC.jpg"
+          class="card-img-top" alt="Event 5" />
+        <div class="card-body">
+          <h5 class="card-title">Event 5</h5>
+        </div>
+      </div>
+      <div class="card">
+        <img src="https://storage.googleapis.com/a1aa/image/lAqCOht0TCaeSSLzw2ZGlPmDwvIEI3RtqajPoTYQN0ZOs8zJA.jpg"
+          class="card-img-top" alt="Event 6" />
+        <div class="card-body">
+          <h5 class="card-title">Event 6</h5>
+        </div>
+      </div>
+      <!-- Add more cards as needed -->
+    </div>
+    <button class="carousel-btn right-btn">&#8594;</button> <!-- Right Button -->
+  </div>
+
+  <div class="section-title">Premiere</div>
+  <div class="card-carousel">
+    <button class="carousel-btn left-btn">&#8592;</button> <!-- Left Button -->
+    <div class="card-container">
+      <div class="card">
+        <img src="https://storage.googleapis.com/a1aa/image/FJ64xM1AcD6FHJgA4oa0cGJSW3VudRGcPJEJxZG7eUNjs8zJA.jpg"
+          class="card-img-top" alt="Premiere 1" />
+        <div class="card-body">
+          <h5 class="card-title">Premiere 1</h5>
+        </div>
+      </div>
+      <div class="card">
+        <img src="https://storage.googleapis.com/a1aa/image/t52p8goZiO6QDBfid8wRyReanID18f5AxbszVhfPgESGklfcC.jpg"
+          class="card-img-top" alt="Premiere 2" />
+        <div class="card-body">
+          <h5 class="card-title">Premiere 2</h5>
+        </div>
+      </div>
+      <div class="card">
+        <img src="https://storage.googleapis.com/a1aa/image/lAqCOht0TCaeSSLzw2ZGlPmDwvIEI3RtqajPoTYQN0ZOs8zJA.jpg"
+          class="card-img-top" alt="Premiere 3" />
+        <div class="card-body">
+          <h5 class="card-title">Premiere 3</h5>
+        </div>
+      </div>
+      <div class="card">
+        <img src="https://storage.googleapis.com/a1aa/image/FJ64xM1AcD6FHJgA4oa0cGJSW3VudRGcPJEJxZG7eUNjs8zJA.jpg"
+          class="card-img-top" alt="Premiere 4" />
+        <div class="card-body">
+          <h5 class="card-title">Premiere 4</h5>
+        </div>
+      </div>
+      <div class="card">
+        <img src="https://storage.googleapis.com/a1aa/image/t52p8goZiO6QDBfid8wRyReanID18f5AxbszVhfPgESGklfcC.jpg"
+          class="card-img-top" alt="Premiere 5" />
+        <div class="card-body">
+          <h5 class="card-title">Premiere 5</h5>
+        </div>
+      </div>
+      <div class="card">
+        <img src="https://storage.googleapis.com/a1aa/image/lAqCOht0TCaeSSLzw2ZGlPmDwvIEI3RtqajPoTYQN0ZOs8zJA.jpg"
+          class="card-img-top" alt="Premiere 6" />
+        <div class="card-body">
+          <h5 class="card-title">Premiere 6</h5>
+        </div>
+      </div>
+      <!-- Add more cards as needed -->
+    </div>
+    <button class="carousel-btn right-btn">&#8594;</button> <!-- Right Button -->
+  </div>
+
+  <div class="section-title">Your Music Studio</div>
+  <div class="card-carousel">
+    <button class="carousel-btn left-btn">&#8592;</button> <!-- Left Button -->
+    <div class="card-container">
+      <div class="card">
+        <img src="https://storage.googleapis.com/a1aa/image/Zxtj3kZfruT2C6wMYczKgyM03Ze2ymna5Pb3JCYppPtDZ5nTA.jpg"
+          class="card-img-top" alt="Music 1" />
+        <div class="card-body">
+          <h5 class="card-title">Music 1</h5>
+        </div>
+      </div>
+      <div class="card">
+        <img src="https://storage.googleapis.com/a1aa/image/QLgGQKkllUJYJx57RJFjsciWnbG6MOb86lxqu7ijGDpLWezJA.jpg"
+          class="card-img-top" alt="Music 2" />
+        <div class="card-body">
+          <h5 class="card-title">Music 2</h5>
+        </div>
+      </div>
+      <div class="card">
+        <img src="https://storage.googleapis.com/a1aa/image/xhrRnZeebRlinUxh914TpWK6sz42j8Wb2yHbK7DVTHP5Y5nTA.jpg"
+          class="card-img-top" alt="Music 3" />
+        <div class="card-body">
+          <h5 class="card-title">Music 3</h5>
+        </div>
+      </div>
+      <div class="card">
+        <img src="https://storage.googleapis.com/a1aa/image/Zxtj3kZfruT2C6wMYczKgyM03Ze2ymna5Pb3JCYppPtDZ5nTA.jpg"
+          class="card-img-top" alt="Music 4" />
+        <div class="card-body">
+          <h5 class="card-title">Music 4</h5>
+        </div>
+      </div>
+      <div class="card">
+        <img src="https://storage.googleapis.com/a1aa/image/Bcmw5fvYWMW9UC4Y27iH8pB9vgFcIcN1Wx3jeHy7nvM8Y5nTA.jpg"
+          class="card-img-top" alt="Music 5" />
+        <div class="card-body">
+          <h5 class="card-title">Music 5</h5>
+        </div>
+      </div>
+      <div class="card">
+        <img src="https://storage.googleapis.com/a1aa/image/uhbJueHHYVSiACSIZtetP8XiaCue0OmBZ24Cglkz4XjbxyPnA.jpg"
+          class="card-img-top" alt="Music 6" />
+        <div class="card-body">
+          <h5 class="card-title">Music 6</h5>
+        </div>
+      </div>
+      <!-- Add more cards as needed -->
+    </div>
+    <button class="carousel-btn right-btn">&#8594;</button> <!-- Right Button -->
+  </div>
+</div>
+</div>
+
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+
+  // ----------------------for movies description----------------------
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".read-more-link").forEach(function (link) {
+      link.addEventListener("click", function (e) {
+        e.preventDefault();
+        const shortDescription = this.parentNode.querySelector(".short-description");
+        const fullDescription = this.parentNode.querySelector(".full-description");
+
+        // Toggle visibility
+        if (shortDescription.classList.contains("d-none")) {
+          shortDescription.classList.remove("d-none");
+          fullDescription.classList.add("d-none");
+          this.textContent = "Read More";
+        } else {
+          shortDescription.classList.add("d-none");
+          fullDescription.classList.remove("d-none");
+          this.textContent = "Read Less";
+        }
+      });
+    });
+  });
+
+  $(document).ready(function () {
+    $(".card").hover(
+      function () {
+        $(this).addClass("shadow-lg").css("cursor", "pointer");
+      },
+      function () {
+        $(this).removeClass("shadow-lg");
+      }
+    );
+  });
+
+  //----------------------function for daily movies listing----------------------
+  document.addEventListener('DOMContentLoaded', function () {
+    fetch('/movies/api/today-shows/')  // Adjust the URL to include 'movies/' if required
+      .then(response => response.json())
+      .then(data => {
+        const showsContainer = document.querySelector('.today-shows');
+        if (data.length > 0) {
+          showsContainer.innerHTML = '';
+          data.forEach(show => {
+            showsContainer.innerHTML += `
+                <div class="highlight">
+                    <h2>${show.movie__name} <span class="badge">Today's Show</span></h2>
+                    <p><strong>Showtime:</strong> <span class="showtime">${show.time}</span></p>
+                    <p><strong>Theater:</strong> ${show.name}</p>
+                    </div>
+                    `;
+          });
+        } else {
+          showsContainer.innerHTML = '<p>No shows available today. Check back later!</p>';
+        }
+      });
+  });
+
+  // ----------------------swipe function----------------------
+  document.addEventListener('DOMContentLoaded', function () {
+    const carouselContainer = document.querySelector('.card-container');
+    const leftBtn = document.querySelector('.left-btn');
+    const rightBtn = document.querySelector('.right-btn');
+
+    let scrollAmount = 0;
+    const cardWidth = 260; // Approx width of each card
+    const maxScroll = carouselContainer.scrollWidth - carouselContainer.clientWidth;
+
+    rightBtn.style.display = maxScroll > 0 ? "block" : "none"; // Show/hide button based on content
+
+    rightBtn.addEventListener("click", function () {
+      if (scrollAmount < maxScroll) {
+        scrollAmount += cardWidth * 2; // Scroll by two cards
+        carouselContainer.scrollTo({ left: scrollAmount, behavior: "smooth" });
+      }
+    });
+
+    leftBtn.addEventListener("click", function () {
+      if (scrollAmount > 0) {
+        scrollAmount -= cardWidth * 2;
+        carouselContainer.scrollTo({ left: scrollAmount, behavior: "smooth" });
+      }
+    });
+
+    // Dynamically show/hide buttons
+    carouselContainer.addEventListener("scroll", function () {
+      leftBtn.style.display = carouselContainer.scrollLeft > 0 ? "block" : "none";
+      rightBtn.style.display = carouselContainer.scrollLeft < maxScroll ? "block" : "none";
+    });
+
+    // Swipe gesture support for both Desktop & Mobile
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+
+    carouselContainer.addEventListener("mousedown", (e) => {
+      isDown = true;
+      startX = e.pageX - carouselContainer.offsetLeft;
+      scrollLeft = carouselContainer.scrollLeft;
+    });
+
+    carouselContainer.addEventListener("mouseleave", () => {
+      isDown = false;
+    });
+
+    carouselContainer.addEventListener("mouseup", () => {
+      isDown = false;
+    });
+
+    carouselContainer.addEventListener("mousemove", (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - carouselContainer.offsetLeft;
+      const walk = (x - startX) * 2; // Scroll-fast effect
+      carouselContainer.scrollLeft = scrollLeft - walk;
+    });
+
+    // Mobile swipe support
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    carouselContainer.addEventListener("touchstart", (e) => {
+      touchStartX = e.touches[0].clientX;
+    });
+
+    carouselContainer.addEventListener("touchmove", (e) => {
+      touchEndX = e.touches[0].clientX;
+    });
+
+    carouselContainer.addEventListener("touchend", () => {
+      if (touchStartX - touchEndX > 50) {
+        // Swipe left
+        rightBtn.click();
+      } else if (touchEndX - touchStartX > 50) {
+        // Swipe right
+        leftBtn.click();
+      }
+    });
+  });
+
+</script>
+
+<!-- <h1>Movies</h1>
+<ul>
+    {% for movie in movies %}
+    <li>
+        <img src="{{movie.image.url}}" alt="image">
+        <strong>{{movie.name}}</strong>{{movie.rating}}
+        <p>Cast:{{movie.cast}}</p>
+        <a href="{% url 'theater_list' movie.id %}">View Theaters</a>
+    </li>
+    {% endfor %}
+</ul> -->
+{% endblock %}
