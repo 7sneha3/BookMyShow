@@ -1,0 +1,85 @@
+{% extends "users/basic.html" %}
+
+{% block content %}
+
+<div class="shows-container">
+    <h1 class="title">🎬 Today's Shows</h1>
+
+    {% if current_shows %}
+    <div class="shows-grid">
+        {% for show in current_shows %}
+        <div class="show-card">
+            <a href="{% url 'theater_list'  movie_id=show.movie__id%}" class="text-decoration-none">
+                <h2>{{ show.movie__name }}</h2>
+            </a>
+            <h2>{{ show.movie.name }}</h2>
+            <p><strong>Theater:</strong> {{ show.name }}</p>
+            <p><strong>Showdate:</strong> {{ show.date }}</p>
+            <p><strong>Showtime:</strong> {{ show.time }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="no-shows">No shows available for today. 🎭</p>
+    {% endif %}
+</div>
+
+
+</div>
+
+
+<style>
+    .shows-container {
+        max-width: 900px;
+        margin: auto;
+        text-align: center;
+        padding: 20px;
+    }
+
+    .title {
+        font-size: 2.5rem;
+        color: #ff4c4c;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .shows-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+    }
+
+    .show-card {
+        background: #1c1c1c;
+        color: white;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .show-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .show-card h2 {
+        font-size: 1.5rem;
+        color: #ffcc00;
+    }
+
+    .show-card p {
+        font-size: 1rem;
+        margin: 5px 0;
+    }
+
+    .no-shows {
+        font-size: 1.2rem;
+        color: gray;
+        margin-top: 20px;
+    }
+</style>
+{% endblock %}
+
+<!-- 
+
+     -->

@@ -1,0 +1,130 @@
+<!-- {% extends "users/basic.html" %}
+
+{% block content %}
+    <style>
+        .highlight {
+            background-color: #fffae6; /* Light yellow */
+            border: 2px solid #ffc107; /* Golden border */
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .highlight h2 {
+            color: #ff4500; /* Orange color */
+        }
+        .showtime {
+            font-size: 1.2em;
+            color: #007bff;
+        }
+    </style>
+
+    <h1>Today's Movies and Showtimes</h1>
+    
+    {% if today_shows %}
+        <div class="today-shows">
+            {% for show in today_shows %}
+                <div class="highlight">
+                    <h2>{{ show.movie.name }}</h2>
+                    <p><strong>Showtime:</strong> <span class="showtime">{{ show.time }}</span></p>
+                    <p><strong>Theater:</strong> {{ show.name }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No shows available today. Check back later!</p>
+    {% endif %}
+{% endblock %}
+
+ -->
+
+
+
+
+
+
+
+
+
+
+<!-- {% extends "users/basic.html" %}
+
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'styles.css' %}">
+
+    <h1>Template is rendering correctly!</h1>
+    <pre>{{ today_shows }}</pre>
+
+
+
+<h1>Welcome to TicketTrove</h1>
+<p>Find the latest movies and book tickets for today!</p>
+
+Debug Output
+<pre>{{ today_shows }}</pre> Displays the raw data
+
+Section for Today's Movies
+<h2>Today's Movies and Showtimes</h2>
+
+{% if today_shows %}
+    <div class="today-shows">
+        {% for show in today_shows %}
+            <div class="highlight">
+                <h3>{{ show.movie.name }}</h3>
+                <p><strong>Showtime:</strong> {{ show.time }}</p>
+                <p><strong>Theater:</strong> {{ show.name }}</p>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p>No shows available today. Check back later!</p>
+{% endif %}
+
+<script>
+    
+    
+    document.addEventListener('DOMContentLoaded', function () {
+        fetch('/movies/api/today-shows/')  // Adjust the URL to include 'movies/' if required
+        .then(response => response.json())
+        .then(data => {
+            const showsContainer = document.querySelector('.today-shows');
+            if (data.length > 0) {
+                showsContainer.innerHTML = '';
+                data.forEach(show => {
+                    showsContainer.innerHTML += `
+                    <div class="highlight">
+                        <h2>${show.movie__name} <span class="badge">Today's Show</span></h2>
+                        <p><strong>Showtime:</strong> <span class="showtime">${show.time}</span></p>
+                        <p><strong>Theater:</strong> ${show.name}</p>
+                        </div>
+                        `;
+                    });
+                } else {
+                    showsContainer.innerHTML = '<p>No shows available today. Check back later!</p>';
+                }
+            });
+        });
+        
+</script>
+        {% endblock %} -->
+        <!-- {% extends "users/basic.html" %}
+
+        {% block content %}
+            <h1>Today's Movies</h1>
+        
+            Debugging raw context data
+            <pre>{{ today_shows }}</pre> This should display a list of shows
+        
+            {% if today_shows %}
+                {% for show in today_shows %}
+                    <div>
+                        <h2>{{ show.movie.name }}</h2>
+                        <p>Theater: {{ show.name }}</p>
+                        <p>Showtime: {{ show.time }}</p>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No shows available for today.</p>
+            {% endif %}
+        {% endblock %}
+                  -->
